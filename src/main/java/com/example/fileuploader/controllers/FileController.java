@@ -35,11 +35,7 @@ public class FileController {
     public ResponseEntity<?> setMaxFileSize(@RequestParam String size){
         System.out.println("new max file size  = " + size);
         this.multipartConfig.setMaxFileSize(Long.parseLong(size));
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Access-Control-Allow-Origin", "*");
-        responseHeaders.set("Access-Control-Allow-Headers", "Origin, X-Requested, Content-Type, Accept Authorization");
-        responseHeaders.set("Access-Control-Allow-Methods", "POST, PUT, PATCH, GET, DELETE");
-        return ResponseEntity.ok().headers(responseHeaders).body("{}");
+        return ResponseEntity.ok().headers(getResponseHeaders()).body("{}");
     }
 
     //TODO: Exception handling
@@ -59,5 +55,14 @@ public class FileController {
         } else{
             return ResponseEntity.badRequest().body("{}");
         }
+    }
+
+    private HttpHeaders getResponseHeaders(){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
+        responseHeaders.set("Access-Control-Allow-Headers", "Origin, X-Requested, Content-Type, Accept Authorization");
+        responseHeaders.set("Access-Control-Allow-Methods", "POST, PUT, PATCH, GET, DELETE");
+        responseHeaders.set("Access-Control-Allow-Credentials", "true");
+        return responseHeaders;
     }
 }
