@@ -26,7 +26,7 @@ public class FileController {
     MultipartElementConfig multipartConfig;
 
     @PutMapping(path = "/setMaxSize")
-    @CrossOrigin(origins = "http://localhost:4200")
+//    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> setMaxFileSize(@RequestParam String size){
         System.out.println("new max file size  = " + size);
         this.multipartConfig.setMaxFileSize(Long.parseLong(size));
@@ -35,7 +35,7 @@ public class FileController {
 
     //TODO: Exception handling
     @PostMapping(path = "/upload", produces = {MediaType.TEXT_PLAIN_VALUE})
-    @CrossOrigin(origins = "http://localhost:4200")
+//    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         System.out.println("file name: " + file.getOriginalFilename());
         System.out.println("file size: " + file.getSize());

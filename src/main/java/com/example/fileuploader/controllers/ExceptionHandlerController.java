@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler({FileSizeLimitExceededException.class})
-    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Object> handleMultipartException(MultipartException ex, WebRequest request) {
         return new ResponseEntity<Object>("{}", new HttpHeaders(), HttpStatus.PAYLOAD_TOO_LARGE);
     }
