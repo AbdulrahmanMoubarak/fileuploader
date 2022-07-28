@@ -1,0 +1,1 @@
+web: java -jar build/libs/fileuploader-0.0.1-SNAPSHOT.jar
