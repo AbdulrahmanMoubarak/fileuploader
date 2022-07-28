@@ -35,7 +35,11 @@ public class FileController {
     public ResponseEntity<?> setMaxFileSize(@RequestParam String size){
         System.out.println("new max file size  = " + size);
         this.multipartConfig.setMaxFileSize(Long.parseLong(size));
-        return ResponseEntity.ok("{}");
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
+        responseHeaders.set("Access-Control-Allow-Headers", "Origin, X-Requested, Content-Type, Accept Authorization");
+        responseHeaders.set("Access-Control-Allow-Methods", "POST, PUT, PATCH, GET, DELETE");
+        return ResponseEntity.ok().headers(responseHeaders).body("{}");
     }
 
     //TODO: Exception handling
