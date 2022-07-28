@@ -25,6 +25,11 @@ public class FileController {
     @Autowired
     MultipartElementConfig multipartConfig;
 
+    @GetMapping(path = "/hello")
+    public ResponseEntity<?> welcomeMessage(){
+        return ResponseEntity.ok("{welcome: hello}");
+    }
+
     @PutMapping(path = "/setMaxSize")
 //    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> setMaxFileSize(@RequestParam String size){
