@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 @Service
 public class FileManagerService {
@@ -16,10 +17,10 @@ public class FileManagerService {
     public boolean storeFile(MultipartFile file){
         String filename = file.getOriginalFilename();
         try {
+
             File theDir = new File(fileUploadPath+filename);
-            if (!theDir.exists()){
-                theDir.mkdirs();
-            }
+            Files.createDirectory(theDir.toPath());
+            Files.createFile(fileUploadPath+filename);
             file.transferTo(theDir);
             return true;
         } catch (SizeLimitExceededException e){
