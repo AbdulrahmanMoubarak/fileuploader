@@ -26,7 +26,7 @@ public class FileManagerService {
             try {
                 file.transferTo(new File("/path/directory").mkdirs());
                 return true;
-            }catch (Exception e){
+            }catch (IOException e){
                 return false;
             }
         }
