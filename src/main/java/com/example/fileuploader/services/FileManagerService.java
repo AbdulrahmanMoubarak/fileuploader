@@ -24,10 +24,10 @@ public class FileManagerService {
         } catch (IOException e) {
             System.out.println(e.getMessage());
             try {
-                File f = new File(fileUploadPath+filename).mkdirs();
+                File f = new File(fileUploadPath+filename).mkdir();
                 file.transferTo(new File(fileUploadPath+filename));
                 return true;
-            }catch (IOException e){
+            }catch (IOException ex){
                 return false;
             }
         }
