@@ -13,22 +13,21 @@ public class FileManagerService {
 
     @Value("${fileuploader_dir}")
     private String fileUploadPath;
-    public boolean storeFile(MultipartFile file){
+
+    public boolean storeFile(MultipartFile file) {
         String filename = file.getOriginalFilename();
         try {
-            file.transferTo(new File(fileUploadPath+filename));
+            file.transferTo(new File(fileUploadPath + filename));
             return true;
-        } catch (SizeLimitExceededException e){
+        } catch (SizeLimitExceededException e) {
             System.out.println(e.getMessage());
             return false;
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            try {
-                file.transferTo(new File("/path/directory").mkdirs());
-                return true;
-            }catch (IOException e){
-                return false;
-            }
+
+            file.transferTo(new File(fileUploadPath + filename).mkdirs());
+            return true;
+
         }
     }
 }
