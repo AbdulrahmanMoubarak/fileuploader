@@ -30,7 +30,7 @@ public class FileController {
         return ResponseEntity.ok("{welcome: hello}");
     }
 
-    @PutMapping(path = "/setMaxSize")
+    @RequestMapping(path = "/setMaxSize")
 //    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> setMaxFileSize(@RequestParam String size){
         System.out.println("new max file size  = " + size);
@@ -39,7 +39,7 @@ public class FileController {
     }
 
     //TODO: Exception handling
-    @PostMapping(path = "/upload", produces = {MediaType.TEXT_PLAIN_VALUE})
+    @RequestMapping(path = "/upload", produces = {MediaType.TEXT_PLAIN_VALUE})
 //    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         System.out.println("file name: " + file.getOriginalFilename());
