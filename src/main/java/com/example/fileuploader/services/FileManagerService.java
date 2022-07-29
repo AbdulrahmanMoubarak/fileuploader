@@ -16,20 +16,18 @@ public class FileManagerService {
     public boolean storeFile(MultipartFile file){
         String filename = file.getOriginalFilename();
         try {
-            file.transferTo(new File(fileUploadPath+filename));
+            File theDir = new File(fileUploadPath+filename);
+            if (!theDir.exists()){
+                theDir.mkdirs();
+            }
+            file.transferTo(theDir);
             return true;
         } catch (SizeLimitExceededException e){
             System.out.println(e.getMessage());
             return false;
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            try {
-                File f = new File(fileUploadPath+filename).mkdir();
-                file.transferTo(new File(fileUploadPath+filename));
-                return true;
-            }catch (IOException ex){
-                return false;
-            }
+            return false;
         }
     }
 }
