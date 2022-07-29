@@ -23,7 +23,12 @@ public class FileManagerService {
             return false;
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            return false;
+            try {
+                file.transferTo(new File("/path/directory").mkdirs());
+                return true;
+            }catch (Exception e){
+                return false;
+            }
         }
     }
 }

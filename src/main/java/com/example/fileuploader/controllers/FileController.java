@@ -32,6 +32,7 @@ public class FileController {
 
     @PutMapping(path = "/setMaxSize")
     //@CrossOrigin(origins = {"http://localhost:4200", "https://angular-file-uploader.herokuapp.com"})
+    @CrossOrigin(origins = "*")
     public ResponseEntity<?> setMaxFileSize(@RequestParam String size){
         System.out.println("new max file size  = " + size);
         this.multipartConfig.setMaxFileSize(Long.parseLong(size));
