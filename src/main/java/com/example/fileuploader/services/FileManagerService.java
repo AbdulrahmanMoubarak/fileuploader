@@ -18,9 +18,10 @@ public class FileManagerService {
         String filename = file.getOriginalFilename();
         try {
 
+            File theFile = new File(fileUploadPath+filename);
             File theDir = new File(fileUploadPath+filename);
             Files.createDirectory(theDir.toPath());
-            Files.createFile(fileUploadPath+filename);
+            Files.createFile(theFile.toPath());
             file.transferTo(theDir);
             return true;
         } catch (SizeLimitExceededException e){
