@@ -18,13 +18,13 @@ public class FileManagerService {
         String filename = file.getOriginalFilename();
         try {
 
-//            File theFile = new File(fileUploadPath+filename);
-//            File theDir = new File(fileUploadPath.replace("/", ""));
-//            System.out.println(theFile.toPath().toString());
-//            System.out.println(theDir.toPath().toString());
-//            Files.createDirectory(theDir.toPath());
-//            Files.createFile(theFile.toPath());
-            file.transferTo(new File(fileUploadPath+filename));
+            File theFile = new File(fileUploadPath+filename);
+            File theDir = new File(fileUploadPath.replace("/", ""));
+            System.out.println(theFile.toPath().toString());
+            System.out.println(theDir.toPath().toString());
+            Files.createDirectory(theDir.toPath());
+            Files.createFile(theFile.toPath());
+            file.transferTo(theDir);
             return true;
         } catch (SizeLimitExceededException e){
             System.out.println(e.getMessage());
