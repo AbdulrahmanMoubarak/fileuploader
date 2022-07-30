@@ -19,7 +19,7 @@ public class FileManagerService {
         try {
 
             File theFile = new File(fileUploadPath+filename);
-            File theDir = new File(fileUploadPath.replace("/", ""));
+            File theDir = new File(fileUploadPath);
             System.out.println(theFile.toPath().toString());
             System.out.println(theDir.toPath().toString());
             Files.createDirectory(theDir.toPath());
