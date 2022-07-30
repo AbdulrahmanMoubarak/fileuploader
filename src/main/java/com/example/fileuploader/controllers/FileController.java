@@ -25,7 +25,7 @@ public class FileController {
     @Autowired
     MultipartElementConfig multipartConfig;
 
-    @GetMapping(path = "/hello")
+    @GetMapping(path = "/")
     public ResponseEntity<?> welcomeMessage(){
         return ResponseEntity.ok("{welcome: hello}");
     }
