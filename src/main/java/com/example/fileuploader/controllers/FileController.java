@@ -31,7 +31,7 @@ public class FileController {
     ServletContext context;
 
     @GetMapping(path = "/")
-    @CrossOrigin(origins = "*")
+    @CrossOrigin()
     public ResponseEntity<?> welcomeMessage(){
         String absolutePath = context.getRealPath("files");
         System.out.println("abs path: "+ absolutePath);
@@ -39,7 +39,7 @@ public class FileController {
     }
 
     @PutMapping(path = "/setMaxSize")
-    @CrossOrigin(origins = "*")
+    @CrossOrigin()
     //@CrossOrigin(origins = {"http://localhost:4200", "https://angular-file-uploader.herokuapp.com"})
     public ResponseEntity<?> setMaxFileSize(@RequestParam String size){
         System.out.println("new max file size  = " + size);
