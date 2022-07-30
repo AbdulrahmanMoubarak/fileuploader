@@ -16,6 +16,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
+
 @RestController
 public class FileController {
 
@@ -25,8 +27,13 @@ public class FileController {
     @Autowired
     MultipartElementConfig multipartConfig;
 
+    @Autowired
+    ServletContext context;
+
     @GetMapping(path = "/")
     public ResponseEntity<?> welcomeMessage(){
+        String absolutePath = context.getRealPath("files");
+        System.out.println("abs path: "+ absolutePath);
         return ResponseEntity.ok("{welcome: hello}");
     }
 
