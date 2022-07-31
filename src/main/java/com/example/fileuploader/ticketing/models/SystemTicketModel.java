@@ -9,35 +9,53 @@ import javax.persistence.Table;
 public class SystemTicketModel {
 
     @Id
-    private int user_id;
+    private int ticketId;
+    private int userId;
     private int size;
+    private String fileName;
 
-    private String file_name;
+    private boolean used;
 
-    public SystemTicketModel(int user_id, int size, String file_name) {
-        this.user_id = user_id;
+    public SystemTicketModel(int userId, int size, String fileName) {
+        this.userId = userId;
         this.size = size;
-        this.file_name = file_name;
+        this.fileName = fileName;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+
+    public int getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(int ticket_id) {
+        this.ticketId = ticket_id;
     }
 
     public SystemTicketModel() {
 
     }
 
-    public String getFile_name() {
-        return file_name;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setFile_name(String file_name) {
-        this.file_name = file_name;
+    public void setFileName(String file_name) {
+        this.fileName = file_name;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int user_id) {
+        this.userId = user_id;
     }
 
     public int getSize() {
