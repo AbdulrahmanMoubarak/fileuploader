@@ -1,16 +1,15 @@
-package com.example.fileuploader.models;
+package com.example.fileuploader.ticketing.models;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "SYSTEM_TICKETS")
-public class SystemTicketModel {
-
+@Table(name = "SYSTEM_USERS")
+public class UserModel {
     @Id
     private int id;
-    private int size;
+    private String name;
 
     public int getId() {
         return id;
@@ -20,11 +19,11 @@ public class SystemTicketModel {
         this.id = id;
     }
 
-    public int getSize() {
-        return size;
+    public String getName() {
+        return name;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setName(String name) {
+        this.name = name;
     }
 }

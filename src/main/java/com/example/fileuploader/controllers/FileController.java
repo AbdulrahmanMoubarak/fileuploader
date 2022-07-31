@@ -46,6 +46,11 @@ public class FileController {
         return ResponseEntity.ok().body("{}");
     }
 
+    @RequestMapping(path = "/upload", method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> handleFileUploadingOptions(){
+        return ResponseEntity.ok("{}");
+    }
+
     //TODO: Exception handling
     @PostMapping(path = "/upload", produces = {MediaType.TEXT_PLAIN_VALUE})
     @CrossOrigin(origins = "*")
