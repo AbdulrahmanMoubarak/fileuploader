@@ -64,13 +64,4 @@ public class FileController {
             return ResponseEntity.badRequest().body("{}");
         }
     }
-
-    private HttpHeaders getResponseHeaders(){
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Access-Control-Allow-Origin", "*");
-        responseHeaders.set("Access-Control-Allow-Headers", "Origin, X-Requested, Content-Type, Accept Authorization");
-        responseHeaders.set("Access-Control-Allow-Methods", "POST, PUT, PATCH, GET, DELETE, OPTIONS");
-        responseHeaders.set("Access-Control-Allow-Credentials", "true");
-        return responseHeaders;
-    }
 }
