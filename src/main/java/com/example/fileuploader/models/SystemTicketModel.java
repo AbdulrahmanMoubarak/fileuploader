@@ -10,8 +10,7 @@ public class SystemTicketModel {
 
     @Id
     private int id;
-    private int capacity;
-    private int times_used;
+    private int size;
 
     public int getId() {
         return id;
@@ -21,19 +20,11 @@ public class SystemTicketModel {
         this.id = id;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public int getSize() {
+        return size;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public int getTimes_used() {
-        return times_used;
-    }
-
-    public void setTimes_used(int times_used) {
-        this.times_used = times_used;
+    public void setSize(int size) {
+        this.size = size;
     }
 }
