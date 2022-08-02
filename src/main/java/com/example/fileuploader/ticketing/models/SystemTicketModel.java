@@ -45,6 +45,7 @@ public class SystemTicketModel {
         this.userId = -1;
         this.size = -1;
         this.fileName = "";
+        this.timestamp = 0;
     }
 
     public String getFileName() {

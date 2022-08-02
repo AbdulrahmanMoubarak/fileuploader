@@ -4,9 +4,7 @@ import com.example.fileuploader.configurations.MultipartElementConfig;
 import com.example.fileuploader.ticketing.exceptions.TicketsLimitExceededException;
 import com.example.fileuploader.ticketing.models.SystemTicketModel;
 import com.example.fileuploader.ticketing.models.UploadRequestMetadataModel;
-import com.example.fileuploader.ticketing.models.UserModel;
 import com.example.fileuploader.ticketing.repositories.TicketRepository;
-import com.example.fileuploader.ticketing.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TicketService {
@@ -62,11 +63,6 @@ public class TicketService {
         return this.ticketRepository.findByTicketId(ticketId);
     }
 
-    @Transactional
-    public void removeUnusedTickets() {
-        this.ticketRepository.removeAllByUsed(false);
-    }
-
     private boolean checkTicketAvailability(long userId) {
         List<SystemTicketModel> userTickets = ticketRepository.findAllByUserId(userId);
         long total = ticketRepository.count();
@@ -76,4 +72,12 @@ public class TicketService {
     private SystemTicketModel getUnusedTickets(long userId) {
         return ticketRepository.findByUserIdAndUsed(userId, false);
     }
+
+//    private void scheduleCleanup(){
+//        CleanupJob.cleanupStarted = true;
+//        ScheduledExecutorService scheduler
+//                = Executors.newScheduledThreadPool(1);
+//        scheduler.scheduleAtFixedRate(cleanupJob, 5, 10, TimeUnit.MINUTES);
+//        System.out.println("Cleaning scheduled");
+//    }
 }
