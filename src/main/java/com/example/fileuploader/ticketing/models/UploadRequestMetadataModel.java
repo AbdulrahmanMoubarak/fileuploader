@@ -3,10 +3,10 @@ package com.example.fileuploader.ticketing.models;
 public class UploadRequestMetadataModel {
 
     private int userId;
-    private int fileSize;
+    private float fileSize;
     private String fileName;
 
-    public UploadRequestMetadataModel(int userId, int fileSize, String fileName) {
+    public UploadRequestMetadataModel(int userId, float fileSize, String fileName) {
         this.userId = userId;
         this.fileSize = fileSize;
         this.fileName = fileName;
@@ -20,11 +20,11 @@ public class UploadRequestMetadataModel {
         this.userId = userId;
     }
 
-    public int getFileSize() {
+    public float getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(int fileSize) {
+    public void setFileSize(float fileSize) {
         this.fileSize = fileSize;
     }
 

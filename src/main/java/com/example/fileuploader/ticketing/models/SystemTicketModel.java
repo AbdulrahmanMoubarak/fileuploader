@@ -1,25 +1,26 @@
 package com.example.fileuploader.ticketing.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "SYSTEM_TICKETS")
+@Table(name = "UPLOAD_TICKETS")
 public class SystemTicketModel {
 
     @Id
-    private int ticketId;
-    private int userId;
-    private int size;
+    @GeneratedValue
+    private Integer ticketId;
+    private long userId;
+    private float size;
     private String fileName;
-
     private boolean used;
+    private long timestamp;
 
-    public SystemTicketModel(int userId, int size, String fileName) {
+    public SystemTicketModel(long userId, float size, String fileName, long timestamp) {
+        this.used = false;
         this.userId = userId;
         this.size = size;
         this.fileName = fileName;
+        this.timestamp = timestamp;
     }
 
     public boolean isUsed() {
@@ -30,16 +31,20 @@ public class SystemTicketModel {
         this.used = used;
     }
 
-    public int getTicketId() {
+    public Integer getTicketId() {
         return ticketId;
     }
 
-    public void setTicketId(int ticket_id) {
+    public void setTicketId(Integer ticket_id) {
         this.ticketId = ticket_id;
     }
 
     public SystemTicketModel() {
-
+        this.ticketId = -1;
+        this.used = false;
+        this.userId = -1;
+        this.size = -1;
+        this.fileName = "";
     }
 
     public String getFileName() {
@@ -50,19 +55,27 @@ public class SystemTicketModel {
         this.fileName = file_name;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int user_id) {
+    public void setUserId(long user_id) {
         this.userId = user_id;
     }
 
-    public int getSize() {
+    public float getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(float size) {
         this.size = size;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

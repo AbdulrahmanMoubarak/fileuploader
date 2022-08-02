@@ -32,40 +32,38 @@ public class FileController {
 
     @GetMapping(path = "/")
     @CrossOrigin()
-    public ResponseEntity<?> welcomeMessage(){
+    public ResponseEntity<?> welcomeMessage() {
         String absolutePath = context.getRealPath("files");
-        System.out.println("abs path: "+ absolutePath);
+        System.out.println("abs path: " + absolutePath);
         return ResponseEntity.ok("{welcome: hello}");
     }
 
     @PutMapping(path = "/setMaxSize")
     @CrossOrigin()
-    public ResponseEntity<?> setMaxFileSize(@RequestParam String size){
+    public ResponseEntity<?> setMaxFileSize(@RequestParam String size) {
         System.out.println("new max file size  = " + size);
         this.multipartConfig.setMaxFileSize(Long.parseLong(size));
         return ResponseEntity.ok().body("{}");
     }
 
-    @RequestMapping(path = "/upload", method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> handleFileUploadingOptions(){
-        return ResponseEntity.ok("{}");
-    }
-
     //TODO: Exception handling
     @PostMapping(path = "/upload", produces = {MediaType.TEXT_PLAIN_VALUE})
     @CrossOrigin(origins = "*")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("ticketId") int ticketId
+    ) {
         System.out.println("file name: " + file.getOriginalFilename());
         System.out.println("file size: " + file.getSize());
         System.out.println("max file size: " + this.multipartConfig.getMaxFileSize());
-        if(new FileValidator().validateFileName(file.getName())) {
-            boolean status = fileService.storeFile(file);
+        if (new FileValidator().validateFileName(file.getName())) {
+            boolean status = fileService.storeFile(file, ticketId);
             if (status) {
                 return ResponseEntity.ok().body("{}");
             } else {
                 return ResponseEntity.internalServerError().body("{}");
             }
-        } else{
+        } else {
             return ResponseEntity.badRequest().body("{}");
         }
     }

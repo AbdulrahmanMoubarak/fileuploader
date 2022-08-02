@@ -1,15 +1,22 @@
 package com.example.fileuploader.ticketing.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "SYSTEM_USERS")
 public class UserModel {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
+
+    public UserModel(String name) {
+        this.name = name;
+    }
+
+    public UserModel() {
+
+    }
 
     public int getId() {
         return id;
