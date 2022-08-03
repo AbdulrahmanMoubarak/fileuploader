@@ -17,7 +17,6 @@ public class CleanupJob {
     @Value("${TICKET_EXPIRATION_MINUTES}")
     private int ticketExpiration;
 
-
     @Transactional
     @Scheduled(fixedRate = 180000, initialDelay = 0)
     public void removeUnusedTickets() {
@@ -27,7 +26,8 @@ public class CleanupJob {
         System.out.println("time in millis " + cal.getTimeInMillis());
     }
 
-    //1659452295249
-    //1659452459459
+    //1659453423206+5*60*1000
+    //1659453719460
+    //1659453723206
 
 }

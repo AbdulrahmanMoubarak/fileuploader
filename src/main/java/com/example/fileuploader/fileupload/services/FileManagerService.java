@@ -1,9 +1,12 @@
-package com.example.fileuploader.services;
+package com.example.fileuploader.fileupload.services;
 
+import com.example.fileuploader.filechecksum.services.FileValidationService;
 import com.example.fileuploader.ticketing.services.TicketService;
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +20,9 @@ public class FileManagerService {
     @Autowired
     TicketService ticketService;
 
+    @Autowired
+    FileValidationService validationService;
+
     @Value("${fileuploader_dir}")
     private String fileUploadPath;
     public boolean storeFile(MultipartFile file, int ticketId){
@@ -25,8 +31,14 @@ public class FileManagerService {
             System.out.println("Ticket found and Removed");
             String filename = file.getOriginalFilename();
             try {
-                file.transferTo(new File(fileUploadPath + filename));
+                File newFile = new File(fileUploadPath + filename);
+                file.transferTo(newFile);
                 System.out.println("File Transferred");
+                if(validationService.fileChecksumExists(newFile)){
+                    newFile.delete();
+                    System.out.println("File deleted");
+                    return false;
+                }
             } catch (IOException e) {
                 return false;
             }

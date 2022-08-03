@@ -1,4 +1,4 @@
-package com.example.fileuploader.configurations;
+package com.example.fileuploader.fileupload.configurations;
 
 import javax.servlet.MultipartConfigElement;
 

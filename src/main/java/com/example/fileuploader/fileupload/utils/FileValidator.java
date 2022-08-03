@@ -1,4 +1,4 @@
-package com.example.fileuploader.utils;
+package com.example.fileuploader.fileupload.utils;
 
 public class FileValidator {
 

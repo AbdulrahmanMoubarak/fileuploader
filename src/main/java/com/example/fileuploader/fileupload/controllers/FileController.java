@@ -1,19 +1,14 @@
-package com.example.fileuploader.controllers;
+package com.example.fileuploader.fileupload.controllers;
 
-import com.example.fileuploader.configurations.MultipartElementConfig;
-import com.example.fileuploader.services.FileManagerService;
-import com.example.fileuploader.utils.FileValidator;
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
+import com.example.fileuploader.filechecksum.services.FileValidationService;
+import com.example.fileuploader.fileupload.configurations.MultipartElementConfig;
+import com.example.fileuploader.fileupload.services.FileManagerService;
+import com.example.fileuploader.fileupload.utils.FileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
@@ -61,7 +56,7 @@ public class FileController {
             if (status) {
                 return ResponseEntity.ok().body("{}");
             } else {
-                return ResponseEntity.internalServerError().body("{}");
+                return ResponseEntity.internalServerError().body("{message:error ticket expired please refresh}");
             }
         } else {
             return ResponseEntity.badRequest().body("{}");

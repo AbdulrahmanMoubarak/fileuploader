@@ -1,4 +1,4 @@
-package com.example.fileuploader.controllers;
+package com.example.fileuploader.fileupload.controllers;
 
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.http.HttpHeaders;

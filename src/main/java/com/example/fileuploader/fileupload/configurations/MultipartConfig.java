@@ -1,4 +1,4 @@
-package com.example.fileuploader.configurations;
+package com.example.fileuploader.fileupload.configurations;
 
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

@@ -1,6 +1,6 @@
 package com.example.fileuploader.ticketing.services;
 
-import com.example.fileuploader.configurations.MultipartElementConfig;
+import com.example.fileuploader.fileupload.configurations.MultipartElementConfig;
 import com.example.fileuploader.ticketing.exceptions.TicketsLimitExceededException;
 import com.example.fileuploader.ticketing.models.SystemTicketModel;
 import com.example.fileuploader.ticketing.models.UploadRequestMetadataModel;
@@ -12,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class TicketService {
@@ -32,7 +29,7 @@ public class TicketService {
 
     public SystemTicketModel generateTicket(UploadRequestMetadataModel metadata) throws TicketsLimitExceededException {
         if (multipartConfig.getMaxFileSize() > metadata.getFileSize()) {
-            SystemTicketModel unusedTicket = getUnusedTickets(metadata.getUserId());
+            SystemTicketModel unusedTicket = null;//getUnusedTickets(metadata.getUserId());
             if (unusedTicket == null) {
                 if (checkTicketAvailability(metadata.getUserId())) {
                     return ticketRepository.save(
@@ -73,11 +70,4 @@ public class TicketService {
         return ticketRepository.findByUserIdAndUsed(userId, false);
     }
 
-//    private void scheduleCleanup(){
-//        CleanupJob.cleanupStarted = true;
-//        ScheduledExecutorService scheduler
-//                = Executors.newScheduledThreadPool(1);
-//        scheduler.scheduleAtFixedRate(cleanupJob, 5, 10, TimeUnit.MINUTES);
-//        System.out.println("Cleaning scheduled");
-//    }
 }
