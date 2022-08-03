@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class TicketController {
@@ -37,6 +34,20 @@ public class TicketController {
             return ResponseEntity.
                     status(HttpStatus.TOO_MANY_REQUESTS).
                     body(String.format("{message:%s}", e.getMessage()));
+        }
+    }
+
+    @PutMapping(path = "/activateTicket")
+    @CrossOrigin()
+    public ResponseEntity<?> activateTicket(@RequestParam("ticketId") int ticketId){
+        boolean succeeded = ticketService.activateTicket(ticketId);
+        System.out.println("Requested ticket activation");
+        if(succeeded) {
+            System.out.println("Ticket activated");
+            return ResponseEntity.ok("{}");
+        }else{
+            System.out.println("Ticket activation failed");
+            return ResponseEntity.notFound().build();
         }
     }
 }

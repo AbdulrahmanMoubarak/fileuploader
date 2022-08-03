@@ -70,4 +70,13 @@ public class TicketService {
         return ticketRepository.findByUserIdAndUsed(userId, false);
     }
 
+    public boolean activateTicket(int ticketId){
+        SystemTicketModel ticket = ticketRepository.findByTicketId(ticketId);
+        if(ticket != null) {
+            ticket.setUsed(true);
+            return true;
+        }
+        return false;
+    }
+
 }
