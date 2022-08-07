@@ -2,6 +2,7 @@ package com.example.fileuploader.ticketing.controllers;
 
 import com.example.fileuploader.ticketing.exceptions.TicketsLimitExceededException;
 import com.example.fileuploader.ticketing.models.SystemTicketModel;
+import com.example.fileuploader.ticketing.models.TicketStatus;
 import com.example.fileuploader.ticketing.models.UploadRequestMetadataModel;
 import com.example.fileuploader.ticketing.services.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +40,9 @@ public class TicketController {
 
     @PutMapping(path = "/activateTicket")
     @CrossOrigin()
-    public ResponseEntity<?> activateTicket(@RequestParam("ticketId") int ticketId){
-        boolean succeeded = ticketService.activateTicket(ticketId);
-        System.out.println("Requested ticket activation");
-        if(succeeded) {
-            System.out.println("Ticket activated");
-            return ResponseEntity.ok("{}");
-        }else{
-            System.out.println("Ticket activation failed");
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> activateTicket(@RequestParam("ticketId") int ticketId) {
+        ticketService.activateTicket(ticketId, TicketStatus.ACTIVE.name());
+        System.out.println("Ticket activated");
+        return ResponseEntity.ok("{}");
     }
 }

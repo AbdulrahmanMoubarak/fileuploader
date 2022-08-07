@@ -12,23 +12,15 @@ public class SystemTicketModel {
     private long userId;
     private float size;
     private String fileName;
-    private boolean used;
+    private String status;
     private long timestamp;
 
     public SystemTicketModel(long userId, float size, String fileName, long timestamp) {
-        this.used = false;
+        this.status = TicketStatus.CREATED.name();
         this.userId = userId;
         this.size = size;
         this.fileName = fileName;
         this.timestamp = timestamp;
-    }
-
-    public boolean isUsed() {
-        return used;
-    }
-
-    public void setUsed(boolean used) {
-        this.used = used;
     }
 
     public Integer getTicketId() {
@@ -39,9 +31,17 @@ public class SystemTicketModel {
         this.ticketId = ticket_id;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public SystemTicketModel() {
         this.ticketId = -1;
-        this.used = false;
+        this.status = TicketStatus.EXPIRED.name();
         this.userId = -1;
         this.size = -1;
         this.fileName = "";

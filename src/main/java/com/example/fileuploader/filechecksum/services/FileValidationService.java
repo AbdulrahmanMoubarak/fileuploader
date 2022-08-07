@@ -28,6 +28,7 @@ public class FileValidationService {
             String fileChecsum = hashFile(file);
             if(fileChecksumRepository.findByChecksum(fileChecsum) == null){
                 fileChecksumRepository.save(new FileChecksumModel(fileChecsum));
+                System.out.println("checksum size: "+fileChecsum.length() + " bytes");
                 System.out.println("checksum saved");
                 return false;
             } else {
@@ -38,6 +39,24 @@ public class FileValidationService {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean fileCorrupted(File file, String checksum){
+        try {
+            String fileChecsum = hashFile(file);
+            if(!checksum.equals(fileChecsum)){
+                System.out.println("File corrupted");
+                System.out.println("Calculated checksum: "+fileChecsum);
+                System.out.println("Received checksum  : "+checksum);
+                return true;
+            } else{
+                System.out.println("Checksum succeeded");
+                return false;
+            }
+        } catch (IOException e) {
+            return true;
+        }
+    }
+
     private String hashFile(File file) throws IOException {
         MessageDigest digest = null;
         try {
@@ -48,7 +67,6 @@ public class FileValidationService {
         FileInputStream in = new FileInputStream(file);
         byte[] byteArray = new byte[1024];
         int bytesCount = 0;
-
         //Read file data and update in message digest
         while ((bytesCount = in.read(byteArray)) != -1) {
             digest.update(byteArray, 0, bytesCount);
@@ -60,7 +78,6 @@ public class FileValidationService {
         for (byte aByte : bytes) {
             sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
         }
-
         //return complete hash
         return sb.toString();
     }

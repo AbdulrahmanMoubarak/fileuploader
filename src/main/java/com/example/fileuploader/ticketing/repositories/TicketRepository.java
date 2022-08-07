@@ -10,12 +10,14 @@ import java.util.List;
 
 public interface TicketRepository extends JpaRepository<SystemTicketModel, Integer> {
     List<SystemTicketModel> findAllByUserId(long user_id);
-    SystemTicketModel findByUserIdAndUsed(long userId, boolean used);
+    SystemTicketModel findByUserIdAndStatus(long userId, String status);
     SystemTicketModel findByTicketId (int ticketId);
     void removeByTicketId(int ticketId);
-    void removeAllByUsedAndTimestampLessThan(boolean used, long timestamp);
-
-    @Query("DELETE FROM SystemTicketModel ticket WHERE ticket.timestamp+(5*60*1000) < :#{#timeMillis}")
+    @Query("DELETE FROM SystemTicketModel ticket WHERE ticket.timestamp+(5*60*1000) < :#{#timeMillis} AND ticket.status <> :#{#status}")
     @Modifying
-    void removeExpiredTickets(long timeMillis);
+    void removeExpiredTickets(long timeMillis, String status);
+
+    @Query("UPDATE SystemTicketModel ticket SET ticket.status = :#{#status} WHERE ticket.ticketId = :#{#ticketId}")
+    @Modifying
+    void updateTicketStatus(String status, int ticketId);
 }

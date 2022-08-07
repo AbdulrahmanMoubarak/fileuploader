@@ -3,6 +3,7 @@ package com.example.fileuploader.ticketing.services;
 import com.example.fileuploader.fileupload.configurations.MultipartElementConfig;
 import com.example.fileuploader.ticketing.exceptions.TicketsLimitExceededException;
 import com.example.fileuploader.ticketing.models.SystemTicketModel;
+import com.example.fileuploader.ticketing.models.TicketStatus;
 import com.example.fileuploader.ticketing.models.UploadRequestMetadataModel;
 import com.example.fileuploader.ticketing.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class TicketService {
 
     public SystemTicketModel generateTicket(UploadRequestMetadataModel metadata) throws TicketsLimitExceededException {
         if (multipartConfig.getMaxFileSize() > metadata.getFileSize()) {
-            SystemTicketModel unusedTicket = null;//getUnusedTickets(metadata.getUserId());
+            SystemTicketModel unusedTicket = getUnusedTickets(metadata.getUserId());
             if (unusedTicket == null) {
                 if (checkTicketAvailability(metadata.getUserId())) {
                     return ticketRepository.save(
@@ -67,16 +68,12 @@ public class TicketService {
     }
 
     private SystemTicketModel getUnusedTickets(long userId) {
-        return ticketRepository.findByUserIdAndUsed(userId, false);
+        return ticketRepository.findByUserIdAndStatus(userId, TicketStatus.CREATED.name());
     }
 
-    public boolean activateTicket(int ticketId){
-        SystemTicketModel ticket = ticketRepository.findByTicketId(ticketId);
-        if(ticket != null) {
-            ticket.setUsed(true);
-            return true;
-        }
-        return false;
+    @Transactional
+    public void activateTicket(int ticketId, String ticketStatus){
+        this.ticketRepository.updateTicketStatus(ticketStatus, ticketId);
     }
 
 }

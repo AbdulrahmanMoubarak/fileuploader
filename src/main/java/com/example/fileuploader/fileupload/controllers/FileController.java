@@ -46,13 +46,14 @@ public class FileController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<String> uploadFile(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("ticketId") int ticketId
+            @RequestParam("ticketId") int ticketId,
+            @RequestParam("checksum") String checksum
     ) {
         System.out.println("file name: " + file.getOriginalFilename());
         System.out.println("file size: " + file.getSize());
         System.out.println("max file size: " + this.multipartConfig.getMaxFileSize());
         if (new FileValidator().validateFileName(file.getName())) {
-            boolean status = fileService.storeFile(file, ticketId);
+            boolean status = fileService.storeFile(file, ticketId, checksum);
             if (status) {
                 return ResponseEntity.ok().body("{}");
             } else {
