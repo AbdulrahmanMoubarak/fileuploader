@@ -28,7 +28,7 @@ public class CleanupJob {
     @Scheduled(fixedRate = 180000, initialDelay = 0)
     public void removeExpiredItems() {
         Calendar cal = Calendar.getInstance();
-        this.ticketRepository.removeExpiredTickets(cal.getTimeInMillis(), TicketStatus.ACTIVE.name());
+        this.ticketRepository.removeExpiredTickets(cal.getTimeInMillis(), TicketStatus.CREATED);
         System.out.println("unused tickets items at " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
         System.out.println("time in millis " + cal.getTimeInMillis());
     }

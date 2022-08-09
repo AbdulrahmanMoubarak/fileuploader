@@ -12,11 +12,12 @@ public class SystemTicketModel {
     private long userId;
     private float size;
     private String fileName;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private TicketStatus status;
     private long timestamp;
 
     public SystemTicketModel(long userId, float size, String fileName, long timestamp) {
-        this.status = TicketStatus.CREATED.name();
+        this.status = TicketStatus.CREATED;
         this.userId = userId;
         this.size = size;
         this.fileName = fileName;
@@ -31,17 +32,10 @@ public class SystemTicketModel {
         this.ticketId = ticket_id;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public SystemTicketModel() {
         this.ticketId = -1;
-        this.status = TicketStatus.EXPIRED.name();
+        this.status = TicketStatus.UPLOAD_ERROR;
         this.userId = -1;
         this.size = -1;
         this.fileName = "";

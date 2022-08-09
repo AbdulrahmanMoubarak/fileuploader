@@ -41,7 +41,7 @@ public class TicketController {
     @PutMapping(path = "/activateTicket")
     @CrossOrigin()
     public ResponseEntity<?> activateTicket(@RequestParam("ticketId") int ticketId) {
-        ticketService.activateTicket(ticketId, TicketStatus.ACTIVE.name());
+        ticketService.setTicketStatus(ticketId, TicketStatus.UPLOADING);
         System.out.println("Ticket activated");
         return ResponseEntity.ok("{}");
     }

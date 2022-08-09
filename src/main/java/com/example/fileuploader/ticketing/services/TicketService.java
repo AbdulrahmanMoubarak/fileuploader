@@ -68,11 +68,11 @@ public class TicketService {
     }
 
     private SystemTicketModel getUnusedTickets(long userId) {
-        return ticketRepository.findByUserIdAndStatus(userId, TicketStatus.CREATED.name());
+        return ticketRepository.findByUserIdAndStatus(userId, TicketStatus.CREATED);
     }
 
     @Transactional
-    public void activateTicket(int ticketId, String ticketStatus){
+    public void setTicketStatus(int ticketId, TicketStatus ticketStatus){
         this.ticketRepository.updateTicketStatus(ticketStatus, ticketId);
     }
 
