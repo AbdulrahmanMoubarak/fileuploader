@@ -2,20 +2,22 @@ package com.example.fileuploader.filechecksum.services;
 
 import com.example.fileuploader.filechecksum.models.FileChecksumModel;
 import com.example.fileuploader.filechecksum.repositories.FileChecksumRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Service
 public class FileValidationService {
+
+    Logger logger = LoggerFactory.getLogger(FileValidationService.class);
 
     @Value("${CHECKSUM_HASHING_ALGORITHM}")
     private String checksumAlgorithm;
@@ -23,16 +25,16 @@ public class FileValidationService {
     @Autowired
     private FileChecksumRepository fileChecksumRepository;
 
-    public boolean fileChecksumExists(File file){
+    public boolean fileChecksumExists(File file, int ticketId){
         try {
             String fileChecsum = hashFile(file);
             if(fileChecksumRepository.findByChecksum(fileChecsum) == null){
-                fileChecksumRepository.save(new FileChecksumModel(fileChecsum));
-                System.out.println("checksum size: "+fileChecsum.length() + " bytes");
-                System.out.println("checksum saved");
+                fileChecksumRepository.save(new FileChecksumModel(ticketId,fileChecsum));
+
+                logger.info("checksum saved for file: " + file.getName() + " with ticket id: " + ticketId);
                 return false;
             } else {
-                System.out.println("checksum already exists");
+                logger.warn("checksum already exists for file: "+ file.getName() + " with ticket id: " + ticketId);
                 return true;
             }
         } catch (IOException e) {
@@ -44,12 +46,10 @@ public class FileValidationService {
         try {
             String fileChecsum = hashFile(file);
             if(!checksum.equals(fileChecsum)){
-                System.out.println("File corrupted");
-                System.out.println("Calculated checksum: "+fileChecsum);
-                System.out.println("Received checksum  : "+checksum);
+                logger.warn("File "+ file.getName() +" is corrupted");
                 return true;
             } else{
-                System.out.println("Checksum succeeded");
+                logger.info("File "+ file.getName() +" is valid");
                 return false;
             }
         } catch (IOException e) {

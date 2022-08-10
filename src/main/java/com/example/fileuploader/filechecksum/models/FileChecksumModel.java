@@ -1,7 +1,6 @@
 package com.example.fileuploader.filechecksum.models;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,23 +9,23 @@ import javax.persistence.Table;
 public class FileChecksumModel {
 
     @Id
-    @GeneratedValue
-    private Integer id;
+    private Integer ticketId;
     private String checksum;
 
-    public FileChecksumModel(String checksum) {
+    public FileChecksumModel(int ticketId ,String checksum) {
         this.checksum = checksum;
+        this.ticketId = ticketId;
     }
 
     public FileChecksumModel() {
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getTicketId() {
+        return ticketId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setTicketId(Integer id) {
+        this.ticketId = id;
     }
 
     public String getChecksum() {

@@ -4,6 +4,8 @@ import com.example.fileuploader.filechecksum.services.FileValidationService;
 import com.example.fileuploader.ticketing.models.SystemTicketModel;
 import com.example.fileuploader.ticketing.services.TicketService;
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,8 @@ public class FileManagerService {
     @Autowired
     FileStorageService campaignService;
 
+    Logger logger = LoggerFactory.getLogger(FileManagerService.class);
+
     @Value("${fileuploader_dir}")
     private String fileUploadPath;
     public boolean storeFile(MultipartFile file, int ticketId, String checksum){
@@ -36,14 +40,15 @@ public class FileManagerService {
             try {
                 File newFile = new File(fileUploadPath + filename);
                 file.transferTo(newFile);
-                System.out.println("File Transferred");
+                logger.info("File "+filename+" Transferred with ticket id: " + ticketId);
                 if(validationService.fileCorrupted(newFile, checksum)){
                     newFile.delete();
                     return false;
                 }
-                if(validationService.fileChecksumExists(newFile)){
+                if(validationService.fileChecksumExists(newFile, ticketId)){
                     newFile.delete();
-                    System.out.println("File deleted");
+                    logger.warn("Checksum already exists for file "+filename+" with ticket id: " + ticketId);
+                    logger.warn("File "+filename+" Deleted with ticket id: " + ticketId);
                     return false;
                 } else {
                     campaignService.storeCampaignNumbers(newFile, userId, ticketId);
@@ -53,7 +58,7 @@ public class FileManagerService {
             }
             return true;
         } else{
-            System.out.println("Ticket not found!!");
+            logger.error("Ticket with id: "+ticketId+" not found!!");
             return false;
         }
     }

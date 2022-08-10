@@ -4,6 +4,8 @@ import com.example.fileuploader.filechecksum.services.FileValidationService;
 import com.example.fileuploader.fileupload.configurations.MultipartElementConfig;
 import com.example.fileuploader.fileupload.services.FileManagerService;
 import com.example.fileuploader.fileupload.utils.FileValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,18 +27,20 @@ public class FileController {
     @Autowired
     ServletContext context;
 
+    Logger logger = LoggerFactory.getLogger(FileController.class);
+
     @GetMapping(path = "/")
     @CrossOrigin()
     public ResponseEntity<?> welcomeMessage() {
         String absolutePath = context.getRealPath("files");
-        System.out.println("abs path: " + absolutePath);
+//        System.out.println("abs path: " + absolutePath);
         return ResponseEntity.ok("{welcome: hello}");
     }
 
     @PutMapping(path = "/setMaxSize")
     @CrossOrigin()
     public ResponseEntity<?> setMaxFileSize(@RequestParam String size) {
-        System.out.println("new max file size  = " + size);
+        logger.info("new max file size  = " + size);
         this.multipartConfig.setMaxFileSize(Long.parseLong(size));
         return ResponseEntity.ok().body("{}");
     }
@@ -49,9 +53,9 @@ public class FileController {
             @RequestParam("ticketId") int ticketId,
             @RequestParam("checksum") String checksum
     ) {
-        System.out.println("file name: " + file.getOriginalFilename());
-        System.out.println("file size: " + file.getSize());
-        System.out.println("max file size: " + this.multipartConfig.getMaxFileSize());
+        logger.info("file name: " + file.getOriginalFilename());
+        logger.info("file size: " + file.getSize());
+        logger.info("ticket id: " + ticketId);
         if (new FileValidator().validateFileName(file.getName())) {
             boolean status = fileService.storeFile(file, ticketId, checksum);
             if (status) {

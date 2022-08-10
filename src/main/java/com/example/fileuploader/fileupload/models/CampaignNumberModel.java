@@ -11,17 +11,20 @@ public class CampaignNumberModel {
     private Integer id;
     private int userId;
     private String campNumber;
+    private int ticketId;
 
     public CampaignNumberModel() {
         this.id = -1;
         this.userId = -1;
         this.campNumber = null;
+        this.ticketId = -1;
     }
 
-    public CampaignNumberModel(int userId, String campNumber) {
+    public CampaignNumberModel(int userId, String campNumber, int ticketId) {
         this.id = 0;
         this.userId = userId;
         this.campNumber = campNumber;
+        this.ticketId = ticketId;
     }
 
     public int getId() {

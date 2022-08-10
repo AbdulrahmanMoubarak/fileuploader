@@ -1,11 +1,14 @@
 package com.example.fileuploader.ticketing.services;
 
 import com.example.fileuploader.fileupload.configurations.MultipartElementConfig;
+import com.example.fileuploader.fileupload.services.FileStorageService;
 import com.example.fileuploader.ticketing.exceptions.TicketsLimitExceededException;
 import com.example.fileuploader.ticketing.models.SystemTicketModel;
 import com.example.fileuploader.ticketing.models.TicketStatus;
 import com.example.fileuploader.ticketing.models.UploadRequestMetadataModel;
 import com.example.fileuploader.ticketing.repositories.TicketRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,8 @@ public class TicketService {
 
     @Value("${MAX_TOTAL_TICKETS}")
     private int maxTotalTickets;
+
+    Logger logger = LoggerFactory.getLogger(TicketService.class);
 
 
     public SystemTicketModel generateTicket(UploadRequestMetadataModel metadata) throws TicketsLimitExceededException {
@@ -52,19 +57,15 @@ public class TicketService {
         }
     }
 
-    @Transactional
-    public void removeTicketById(int ticketId) {
-        this.ticketRepository.removeByTicketId(ticketId);
-    }
-
     public SystemTicketModel getTicketById(int ticketId) {
         return this.ticketRepository.findByTicketId(ticketId);
     }
 
     private boolean checkTicketAvailability(long userId) {
-        List<SystemTicketModel> userTickets = ticketRepository.findAllByUserId(userId);
-        long total = ticketRepository.count();
-        return userTickets.size() < this.maxUserTickets && total < maxTotalTickets;
+        List<SystemTicketModel> userUploadingTickets = ticketRepository.findAllByUserIdAndStatus(userId, TicketStatus.UPLOADING);
+        List<SystemTicketModel> userStoringTickets = ticketRepository.findAllByUserIdAndStatus(userId, TicketStatus.STORING);
+//        long total = ticketRepository.count();
+        return (userUploadingTickets.size()+userStoringTickets.size()) < this.maxUserTickets ;//&& total < maxTotalTickets;
     }
 
     private SystemTicketModel getUnusedTickets(long userId) {
@@ -73,6 +74,7 @@ public class TicketService {
 
     @Transactional
     public void setTicketStatus(int ticketId, TicketStatus ticketStatus){
+        logger.info("Ticket with id: " + ticketId + " changed status to " + ticketStatus.name());
         this.ticketRepository.updateTicketStatus(ticketStatus, ticketId);
     }
 
