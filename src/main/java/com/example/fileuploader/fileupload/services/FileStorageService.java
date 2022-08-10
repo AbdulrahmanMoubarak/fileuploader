@@ -1,7 +1,7 @@
 package com.example.fileuploader.fileupload.services;
 
 import com.example.fileuploader.fileupload.models.CampaignNumberModel;
-import com.example.fileuploader.fileupload.repositories.CampaignNumberRepository;
+import com.example.fileuploader.fileupload.repositories.CampaignNumbersRepository;
 import com.example.fileuploader.ticketing.models.TicketStatus;
 import com.example.fileuploader.ticketing.services.TicketService;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ import java.util.List;
 public class FileStorageService {
 
     @Autowired
-    CampaignNumberRepository campaignRepo;
+    CampaignNumbersRepository campaignNumbersRepository;
 
     @Autowired
     TicketService ticketService;
@@ -29,32 +29,34 @@ public class FileStorageService {
     Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 
     @Async
-    public void storeCampaignNumbers(File file, int userId, int ticketId) {
+    public void storeCampaignNumbers(File targetFile, int userId, int ticketId) {
         try {
-            logger.info("Began record storage service for file: " + file.getName() + "with ticket id: " + ticketId);
+            logger.info("Started record storage service for file: " + targetFile.getName() + "with ticket id: " + ticketId);
             List<CampaignNumberModel> records = new ArrayList<>();
             ticketService.setTicketStatus(ticketId, TicketStatus.STORING);
+
             //get stream reader for the file.
-            FileInputStream in = new FileInputStream(file);
-            InputStreamReader inReader = new InputStreamReader(in);
-            BufferedReader reader = new BufferedReader(inReader);
+            FileInputStream targetFileInputStream = new FileInputStream(targetFile);
+            InputStreamReader targetFileInputStreamReader = new InputStreamReader(targetFileInputStream);
+            BufferedReader targetFileBufferReader = new BufferedReader(targetFileInputStreamReader);
 
             //save records.
-            while (reader.ready()) {
-                String record = reader.readLine();
+            while (targetFileBufferReader.ready()) {
+                String record = targetFileBufferReader.readLine();
                 if (!records.contains(new CampaignNumberModel(userId, record, ticketId)))
                     records.add(new CampaignNumberModel(userId, record, ticketId));
             }
-            campaignRepo.saveAll(records);
-            logger.info("Campaign storage succeeded for file: " + file.getName() + "with ticket id: " + ticketId);
+            campaignNumbersRepository.saveAll(records);
+            logger.info("Campaign storage succeeded for file: " + targetFile.getName() + "with ticket id: " + ticketId);
             ticketService.setTicketStatus(ticketId, TicketStatus.STORED);
-            reader.close();
-            inReader.close();
-            in.close();
+            targetFileBufferReader.close();
+            targetFileInputStreamReader.close();
+            targetFileInputStream.close();
+            targetFile.delete();
         } catch (Exception e) {
             logger.error(e.getMessage());
             ticketService.setTicketStatus(ticketId, TicketStatus.SERVER_ERROR);
-            logger.error("Cannot Store Data for file: " + file.getName() + "with ticket id: " + ticketId);
+            logger.error("Cannot Store Data for file: " + targetFile.getName() + "with ticket id: " + ticketId);
         }
     }
 }

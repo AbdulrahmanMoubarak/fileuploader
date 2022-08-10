@@ -1,36 +1,23 @@
 package com.example.fileuploader.ticketing.models;
 
+import lombok.*;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "SYSTEM_USERS")
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
+    @Setter
     private int id;
+
+    @Getter
+    @Setter
+    @NonNull
     private String name;
-
-    public UserModel(String name) {
-        this.name = name;
-    }
-
-    public UserModel() {
-
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

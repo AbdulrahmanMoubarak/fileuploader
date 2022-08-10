@@ -20,21 +20,21 @@ public class FileValidationService {
     Logger logger = LoggerFactory.getLogger(FileValidationService.class);
 
     @Value("${CHECKSUM_HASHING_ALGORITHM}")
-    private String checksumAlgorithm;
+    private String checksumHashingAlgorithm;
 
     @Autowired
     private FileChecksumRepository fileChecksumRepository;
 
-    public boolean fileChecksumExists(File file, int ticketId){
+    public boolean fileChecksumExists(File targetFile, int ticketId){
         try {
-            String fileChecsum = hashFile(file);
-            if(fileChecksumRepository.findByChecksum(fileChecsum) == null){
-                fileChecksumRepository.save(new FileChecksumModel(ticketId,fileChecsum));
+            String fileChecksum = hashFile(targetFile);
+            if(fileChecksumRepository.findByFileChecksum(fileChecksum) == null){
+                fileChecksumRepository.save(new FileChecksumModel(ticketId,fileChecksum));
 
-                logger.info("checksum saved for file: " + file.getName() + " with ticket id: " + ticketId);
+                logger.info("checksum saved for file: " + targetFile.getName() + " with ticket id: " + ticketId);
                 return false;
             } else {
-                logger.warn("checksum already exists for file: "+ file.getName() + " with ticket id: " + ticketId);
+                logger.warn("checksum already exists for file: "+ targetFile.getName() + " with ticket id: " + ticketId);
                 return true;
             }
         } catch (IOException e) {
@@ -42,14 +42,14 @@ public class FileValidationService {
         }
     }
 
-    public boolean fileCorrupted(File file, String checksum){
+    public boolean isFileCorrupted(File targetFile, String originalChecksum){
         try {
-            String fileChecsum = hashFile(file);
-            if(!checksum.equals(fileChecsum)){
-                logger.warn("File "+ file.getName() +" is corrupted");
+            String fileChecksum = hashFile(targetFile);
+            if(!originalChecksum.equals(fileChecksum)){
+                logger.warn("File "+ targetFile.getName() +" is corrupted");
                 return true;
             } else{
-                logger.info("File "+ file.getName() +" is valid");
+                logger.info("File "+ targetFile.getName() +" is valid");
                 return false;
             }
         } catch (IOException e) {
@@ -60,7 +60,7 @@ public class FileValidationService {
     private String hashFile(File file) throws IOException {
         MessageDigest digest = null;
         try {
-            digest = MessageDigest.getInstance(checksumAlgorithm);
+            digest = MessageDigest.getInstance(checksumHashingAlgorithm);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

@@ -1,38 +1,20 @@
 package com.example.fileuploader.ticketing.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class UploadRequestMetadataModel {
-
+    @Getter
+    @Setter
     private int userId;
+    @Getter
+    @Setter
     private float fileSize;
+    @Getter
+    @Setter
     private String fileName;
-
-    public UploadRequestMetadataModel(int userId, float fileSize, String fileName) {
-        this.userId = userId;
-        this.fileSize = fileSize;
-        this.fileName = fileName;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public float getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(float fileSize) {
-        this.fileSize = fileSize;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
 }

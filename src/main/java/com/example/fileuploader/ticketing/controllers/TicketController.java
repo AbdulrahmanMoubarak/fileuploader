@@ -1,6 +1,5 @@
 package com.example.fileuploader.ticketing.controllers;
 
-import com.example.fileuploader.fileupload.services.FileStorageService;
 import com.example.fileuploader.ticketing.exceptions.TicketsLimitExceededException;
 import com.example.fileuploader.ticketing.models.SystemTicketModel;
 import com.example.fileuploader.ticketing.models.TicketStatus;
@@ -26,12 +25,12 @@ public class TicketController {
     @CrossOrigin()
     public ResponseEntity<?> provideTicket(
             @RequestParam("userId") int userId,
-            @RequestParam("fileName") String fileName,
-            @RequestParam("fileSize") float fileSize
+            @RequestParam("fileName") String targetFileName,
+            @RequestParam("fileSize") float targetFileSize
     ) {
         try {
-            UploadRequestMetadataModel metadata = new UploadRequestMetadataModel(userId, fileSize, fileName);
-            SystemTicketModel ticket = ticketService.generateTicket(metadata);
+            UploadRequestMetadataModel uploadRequestMetadata = new UploadRequestMetadataModel(userId, targetFileSize, targetFileName);
+            SystemTicketModel ticket = ticketService.generateTicket(uploadRequestMetadata);
             logger.info("ticket generated with id: " + ticket.getTicketId());
             return ResponseEntity
                     .ok(ticket);

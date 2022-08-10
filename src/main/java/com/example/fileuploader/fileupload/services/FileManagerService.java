@@ -2,21 +2,17 @@ package com.example.fileuploader.fileupload.services;
 
 import com.example.fileuploader.filechecksum.services.FileValidationService;
 import com.example.fileuploader.ticketing.models.SystemTicketModel;
+import com.example.fileuploader.ticketing.models.TicketStatus;
 import com.example.fileuploader.ticketing.services.TicketService;
-import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class FileManagerService {
@@ -24,34 +20,35 @@ public class FileManagerService {
     @Autowired
     TicketService ticketService;
     @Autowired
-    FileValidationService validationService;
+    FileValidationService fileValidationService;
     @Autowired
-    FileStorageService campaignService;
+    FileStorageService fileStorageService;
 
     Logger logger = LoggerFactory.getLogger(FileManagerService.class);
 
     @Value("${fileuploader_dir}")
     private String fileUploadPath;
-    public boolean storeFile(MultipartFile file, int ticketId, String checksum){
+    public boolean storeFile(MultipartFile uploadedFile, int ticketId, String checksum){
         SystemTicketModel userTicket = ticketService.getTicketById(ticketId);
         int userId = (int) userTicket.getUserId();
         if(userTicket != null) {
-            String filename = file.getOriginalFilename();
+            ticketService.setTicketStatus(ticketId, TicketStatus.UPLOADED);
+            String filename = uploadedFile.getOriginalFilename();
             try {
-                File newFile = new File(fileUploadPath + filename);
-                file.transferTo(newFile);
+                File storageFile = new File(fileUploadPath + filename);
+                uploadedFile.transferTo(storageFile);
                 logger.info("File "+filename+" Transferred with ticket id: " + ticketId);
-                if(validationService.fileCorrupted(newFile, checksum)){
-                    newFile.delete();
+                if(fileValidationService.isFileCorrupted(storageFile, checksum)){
+                    storageFile.delete();
                     return false;
                 }
-                if(validationService.fileChecksumExists(newFile, ticketId)){
-                    newFile.delete();
+                if(fileValidationService.fileChecksumExists(storageFile, ticketId)){
+                    storageFile.delete();
                     logger.warn("Checksum already exists for file "+filename+" with ticket id: " + ticketId);
                     logger.warn("File "+filename+" Deleted with ticket id: " + ticketId);
                     return false;
                 } else {
-                    campaignService.storeCampaignNumbers(newFile, userId, ticketId);
+                    fileStorageService.storeCampaignNumbers(storageFile, userId, ticketId);
                 }
             } catch (IOException e) {
                 return false;

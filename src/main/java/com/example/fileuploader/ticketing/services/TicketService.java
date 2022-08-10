@@ -1,7 +1,6 @@
 package com.example.fileuploader.ticketing.services;
 
 import com.example.fileuploader.fileupload.configurations.MultipartElementConfig;
-import com.example.fileuploader.fileupload.services.FileStorageService;
 import com.example.fileuploader.ticketing.exceptions.TicketsLimitExceededException;
 import com.example.fileuploader.ticketing.models.SystemTicketModel;
 import com.example.fileuploader.ticketing.models.TicketStatus;
@@ -28,21 +27,21 @@ public class TicketService {
     private int maxUserTickets;
 
     @Value("${MAX_TOTAL_TICKETS}")
-    private int maxTotalTickets;
+    private int maxSystemTotalTickets;
 
     Logger logger = LoggerFactory.getLogger(TicketService.class);
 
 
-    public SystemTicketModel generateTicket(UploadRequestMetadataModel metadata) throws TicketsLimitExceededException {
-        if (multipartConfig.getMaxFileSize() > metadata.getFileSize()) {
-            SystemTicketModel unusedTicket = getUnusedTickets(metadata.getUserId());
+    public SystemTicketModel generateTicket(UploadRequestMetadataModel requestMetadata) throws TicketsLimitExceededException {
+        if (multipartConfig.getMaxFileSize() > requestMetadata.getFileSize()) {
+            SystemTicketModel unusedTicket = getUnusedTickets(requestMetadata.getUserId());
             if (unusedTicket == null) {
-                if (checkTicketAvailability(metadata.getUserId())) {
+                if (checkTicketAvailability(requestMetadata.getUserId())) {
                     return ticketRepository.save(
                             new SystemTicketModel(
-                                    metadata.getUserId(),
-                                    metadata.getFileSize(),
-                                    metadata.getFileName(),
+                                    requestMetadata.getUserId(),
+                                    requestMetadata.getFileSize(),
+                                    requestMetadata.getFileName(),
                                     Calendar.getInstance().getTimeInMillis()
                             )
                     );
@@ -58,14 +57,13 @@ public class TicketService {
     }
 
     public SystemTicketModel getTicketById(int ticketId) {
-        return this.ticketRepository.findByTicketId(ticketId);
+        return ticketRepository.findByTicketId(ticketId);
     }
 
     private boolean checkTicketAvailability(long userId) {
-        List<SystemTicketModel> userUploadingTickets = ticketRepository.findAllByUserIdAndStatus(userId, TicketStatus.UPLOADING);
-        List<SystemTicketModel> userStoringTickets = ticketRepository.findAllByUserIdAndStatus(userId, TicketStatus.STORING);
-//        long total = ticketRepository.count();
-        return (userUploadingTickets.size()+userStoringTickets.size()) < this.maxUserTickets ;//&& total < maxTotalTickets;
+        long totalUserTickets = ticketRepository.getUserActiveTickets(userId);
+        long totalSystemTickets = getActiveTicketsCount();
+        return totalUserTickets < maxUserTickets && totalSystemTickets < maxSystemTotalTickets;
     }
 
     private SystemTicketModel getUnusedTickets(long userId) {
@@ -73,9 +71,12 @@ public class TicketService {
     }
 
     @Transactional
-    public void setTicketStatus(int ticketId, TicketStatus ticketStatus){
+    public void setTicketStatus(int ticketId, TicketStatus ticketStatus) {
         logger.info("Ticket with id: " + ticketId + " changed status to " + ticketStatus.name());
-        this.ticketRepository.updateTicketStatus(ticketStatus, ticketId);
+        ticketRepository.updateTicketStatus(ticketStatus, ticketId);
     }
 
+    private long getActiveTicketsCount() {
+        return ticketRepository.getAllActiveTickets();
+    }
 }
