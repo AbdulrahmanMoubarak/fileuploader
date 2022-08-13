@@ -8,31 +8,30 @@ import javax.persistence.*;
 @Table(name = "UPLOAD_TICKETS")
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Data
 public class SystemTicketModel {
     @Id
     @GeneratedValue
-    @Getter
-    @Setter
     private Integer ticketId;
-    @Getter
-    @Setter
+
+
     @NonNull
     private long userId;
-    @Getter
-    @Setter
+
+
     @NonNull
     private float size;
-    @Getter
-    @Setter
+
+
     @NonNull
     private String fileName;
     @Enumerated(EnumType.STRING)
-    @Getter
-    @Setter
+
+
     @NonNull
     private TicketStatus status = TicketStatus.CREATED;
-    @Getter
-    @Setter
+
+
     @NonNull
     private long timestamp;
 

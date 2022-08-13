@@ -9,23 +9,24 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Data
 public class CampaignNumberModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter
-    @Setter
+    
+    
     private Integer id;
-    @Getter
-    @Setter
+    
+    
     @NonNull
     private int userId;
-    @Getter
-    @Setter
+    
+    
     @NonNull
     private String phoneNumber;
-    @Getter
-    @Setter
+    
+    
     @NonNull
     private int ticketId;
 }

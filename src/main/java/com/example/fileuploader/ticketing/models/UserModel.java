@@ -9,15 +9,12 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Data
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter
-    @Setter
     private int id;
 
-    @Getter
-    @Setter
     @NonNull
     private String name;
 }

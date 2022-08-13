@@ -1,9 +1,6 @@
 package com.example.fileuploader.filechecksum.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,8 +10,9 @@ import javax.persistence.Table;
 @Table(name = "FILES_CHECKSUM")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class FileChecksumModel {
     @Id
-    @Getter @Setter private Integer ticketId;
-    @Getter @Setter private String fileChecksum;
+      private Integer ticketId;
+      private String fileChecksum;
 }
