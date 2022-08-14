@@ -52,13 +52,13 @@ public class UploadingFinishesSteps {
                 .willReturn(aResponse().withStatus(200))
         );
 
-        stubFor(post(urlEqualTo("/upload_err"))
-                .withHeader("content-type", equalTo("application/json"))
-                .withRequestBody(containing("ticketId"))
-                .withRequestBody(containing("file"))
-                .withRequestBody(containing("checksum"))
-                .willReturn(aResponse().withStatus(500))
-        );
+//        stubFor(post(urlEqualTo("/upload_err"))
+//                .withHeader("content-type", equalTo("application/json"))
+//                .withRequestBody(containing("ticketId"))
+//                .withRequestBody(containing("file"))
+//                .withRequestBody(containing("checksum"))
+//                .willReturn(aResponse().withStatus(500))
+//        );
     }
 
     @Before
@@ -93,21 +93,21 @@ public class UploadingFinishesSteps {
         Assertions.assertThat(expectedStatusCode).isEqualTo(actualResponseStatusCode);
     }
 
-    @When("^another uploading process with ticket id ([0-9]+) is for a file (.*) that has a checksum equals (.*) is finished$")
-    public void whenAnotherUploadingProcessForFileWithTicketAndChecksumIsFinished(int ticketId, String file, String checksum) throws JSONException {
-        HttpEntity<String> request = getUploadFileRequestObject(ticketId, file, checksum);
-        actualResponseStatusCode = testRestTemplate.postForEntity("http://localhost:" + mockServer.port() + "/upload_err", request, String.class).getStatusCodeValue();
-    }
-
-    @But("^the calculated checksum on the server is (.*)$")
-    public void butTheCalculatedChecksumIs(String checksum){
-
-    }
-
-    @Then("^a response with status code ([0-9]+) is sent to indicated the uploading error$")
-    public void thenResponseWithStatusCodeIsSent(int statusCode){
-        Assertions.assertThat(statusCode).isEqualTo(actualResponseStatusCode);
-    }
+//    @When("^another uploading process with ticket id ([0-9]+) is for a file (.*) that has a checksum equals (.*) is finished$")
+//    public void whenAnotherUploadingProcessForFileWithTicketAndChecksumIsFinished(int ticketId, String file, String checksum) throws JSONException {
+//        HttpEntity<String> request = getUploadFileRequestObject(ticketId, file, checksum);
+//        actualResponseStatusCode = testRestTemplate.postForEntity("http://localhost:" + mockServer.port() + "/upload_err", request, String.class).getStatusCodeValue();
+//    }
+//
+//    @But("^the calculated checksum on the server is (.*)$")
+//    public void butTheCalculatedChecksumIs(String checksum){
+//
+//    }
+//
+//    @Then("^a response with status code ([0-9]+) is sent to indicated the uploading error$")
+//    public void thenResponseWithStatusCodeIsSent(int statusCode){
+//        Assertions.assertThat(statusCode).isEqualTo(actualResponseStatusCode);
+//    }
 
     private HttpEntity<String> getUploadFileRequestObject(int ticketId, String file, String checksum) throws JSONException {
         HttpHeaders headers = new HttpHeaders();
